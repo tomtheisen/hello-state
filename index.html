@@ -1,71 +1,15 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <script>
-            const __REACT_DEVTOOLS_GLOBAL_HOOK__ = {
-                supportsFiber: true,
-                checkDCE: true, // i think stands for "dead code elimination"?
-                inject(internals) {
-                    window.reactInternals = internals;
-
-                    let dispatcher = null;
-                    delete reactInternals.currentDispatcherRef.current;
-                    Object.defineProperty(reactInternals.currentDispatcherRef, "current", {
-                        get() { return dispatcher; },
-                        set(value) { 
-                            console.trace("somebody setting dispatcher");
-                            dispatcher = value;
-                        }
-                    })
-                }
-            };
-            
-            function setStateTjt(inital) {
-                const fiber = reactInternals.getCurrentFiber();
-                // console.log("tjt state", fiber, fiber.memoizedState);
-                console.log("dispatch", reactInternals.currentDispatcherRef.current)
-            }
-        </script>
+        <script src="getinternals.js"></script>
         <script src="node_modules/react/umd/react.development.js"></script>
         <script src="node_modules/react-dom/umd/react-dom.development.js"></script>
     </head>
     <body>
         <div id="root"></div>
 
-        <script>
-            function App() {
-                return "hello dispatch";
-            }
-
-            const root = ReactDOM.createRoot(document.getElementById("root"));
-            root.render(React.createElement(App, {}));
-        </script>
+        <script src="fakestate.js"></script>
+        <script src="app.js"></script>
     </body>
 </html>
 
-<!-- internals props:
-    bundleType
-    version
-    rendererPackageName
-    rendererConfig
-    overrideHookState
-    overrideHookStateDeletePath
-    overrideHookStateRenamePath
-    overrideProps
-    overridePropsDeletePath
-    overridePropsRenamePath
-    setErrorHandler
-    setSuspenseHandler
-    scheduleUpdate
-    currentDispatcherRef
-    findHostInstanceByFiber
-    findFiberByHostInstance
-    findHostInstancesForRefresh
-    scheduleRefresh
-    scheduleRoot
-    setRefreshHandler
-    getCurrentFiber
-    reconcilerVersion
-    getLaneLabelMap
-    injectProfilingHooks
--->
