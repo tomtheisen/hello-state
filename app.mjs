@@ -1,4 +1,7 @@
+import { fakeState } from './fakestate.mjs'
+
 // also faked createElement for bonus points, but don't need to
+// jsx, createElement, or any normal react things will work here
 function fakeElement(type, props = {}, ...children) {
     if (children.length) props.children = children;
     return { $$typeof: Symbol.for('react.element'), ref: null, type, props };

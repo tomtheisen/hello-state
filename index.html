@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <script src="fakestate.js">/* this one has to be before react loads */</script>
-        <script src="react.development.js"></script>
-        <script src="react-dom.development.js"></script>
+        <script type="module" src="fakestate.mjs">/* this one has to be before react loads */</script>
+        
+        <!-- Modules are deferred, so react must be also, to ensure it loads after the fake hook -->
+        <script defer src="react.development.js"></script>
+        <script defer src="react-dom.development.js"></script>
     </head>
     <body>
+        <p>This needs to be invoked from a web server to get the modules to work.  You can use <code>npx http-server</code>.</p>
         <div id="rootdiv"></div>
-        <script src="app.js"></script>
+        <script type="module" src="app.mjs"></script>
     </body>
 </html>
 
