@@ -1,12 +1,13 @@
 const fibers = new Set;
 function App() {
     const [count1, setCount1] = React.useState(0);
-    const [count2, setCount2] = fakeState(0);
+    const [count2, setCount2] = fakeState(render, 0);
 
     const fiber = reactInternals.getCurrentFiber();
     fibers.add(fiber);
     console.log(fibers.size, "fibers seen");
 
+    // inlined createElement, but don't need to
     const btn1 = {
         $$typeof: Symbol.for('react.element'), 
         type: "button", 
@@ -22,4 +23,8 @@ function App() {
     return [btn1, btn2];
 }
 
-ReactDOM.createRoot(root).render(React.createElement(App, {}));
+const root = ReactDOM.createRoot(rootdiv);
+function render() {
+    root.render(React.createElement(App, {}));
+}
+render();

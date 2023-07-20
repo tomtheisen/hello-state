@@ -1,4 +1,30 @@
-/* internals properties:
+{
+    const TRACE_ON_DISPATCHER_TRANSITION = false;
+
+    const inject = internals => {
+        Object.defineProperty(internals.currentDispatcherRef, "current", {
+            get() { return this._current; },
+            set(value) { 
+                if (TRACE_ON_DISPATCHER_TRANSITION) {
+                    console.trace("Dispatcher changed");
+                }
+                this._current = value;
+            }
+        });
+        return window.reactInternals = internals;
+    }
+
+    if (__REACT_DEVTOOLS_GLOBAL_HOOK__) {
+        // react devtools already created the global, just MitM the inject call
+        const originalInject = __REACT_DEVTOOLS_GLOBAL_HOOK__.inject;
+        __REACT_DEVTOOLS_GLOBAL_HOOK__.inject = internals => originalInject(inject(internals));
+    }
+    else {
+        var __REACT_DEVTOOLS_GLOBAL_HOOK__ = { supportsFiber: true, checkDCE: true, inject };
+    }
+}
+
+/* reactInternals properties:
     bundleType
     version
     rendererPackageName
@@ -25,8 +51,6 @@
     injectProfilingHooks
 */
 
-if (!reactInternals) throw 'getinternals.js needs to be loaded before react';
-
 const fiberStateMap = new WeakMap;
 // each fiber has two representations, and by the time i get them they're more or less interchangable.
 // i need to arbitrarily pick on of the two to be the key for me weakmap holding state
@@ -36,7 +60,7 @@ function pickKey(fiber) {
         ? fiber
         : fiber.alternate;
 }
-function fakeState(state) {
+function fakeState(refresh, state) {
     const fiber = reactInternals.getCurrentFiber();
     const key = pickKey(fiber);
     if (fiberStateMap.has(key)) {
@@ -50,7 +74,7 @@ function fakeState(state) {
             newState = newState(fiberStateMap.get(key));
         }
         fiberStateMap.set(key, newState);
-        reactInternals.scheduleUpdate(fiber);
+        refresh();
     }
     return [state, setState];
 }
