@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <script src="fakestate.js"></script>
-        <script src="node_modules/react/umd/react.development.js"></script>
-        <script src="node_modules/react-dom/umd/react-dom.development.js"></script>
+        <script src="fakestate.js">/* this one has to be before react loads */</script>
+        <script src="react.development.js"></script>
+        <script src="react-dom.development.js"></script>
     </head>
     <body>
         <div id="rootdiv"></div>
-
         <script src="app.js"></script>
     </body>
 </html>
