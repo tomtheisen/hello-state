@@ -21,7 +21,4 @@ function App() {
 }
 
 const root = ReactDOM.createRoot(rootdiv);
-function render() {
-    root.render(React.createElement(App, {}));
-}
-render();
+root.render(fakeElement(App));
